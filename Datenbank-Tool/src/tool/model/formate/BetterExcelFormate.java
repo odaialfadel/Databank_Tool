@@ -30,17 +30,21 @@ public class BetterExcelFormate implements ServerFormate {
 	private Workbook book;
 	private Sheet sheet;
 	private ResultSet resultSet;
-	public static int rowIndex = 0;
+	public int rowIndex = 0;
 
 	@Override
 	public void export(ResultSet rs, String filename, String outPut) throws SQLException, IOException {
 		this.resultSet = rs;
 
 		String path = outPut + datumA() + "\\";
-
-		writeHeaderRows(filename);
+		String temp = "";
+		// remove last 4 chars
+		if (filename.contains("txt") || filename.contains("sql")) {
+			temp = filename.substring(0, (filename.length() - 4));
+		}
+		writeHeaderRows(temp);
 		writeDataRows();
-		exportFileXlsx(filename, path);
+		exportFileXlsx(temp, path);
 	}
 
 	private List<String> columnsList() {
@@ -136,7 +140,7 @@ public class BetterExcelFormate implements ServerFormate {
 	/*
 	 * Datum so formatieren: 20210727
 	 */
-	static String datumA() {
+	public static String datumA() {
 		DateFormat dateFo = new SimpleDateFormat("yyyyMMdd");
 		Date dF = new Date();
 		return dateFo.format(dF);

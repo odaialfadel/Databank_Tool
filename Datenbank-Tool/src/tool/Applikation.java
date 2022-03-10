@@ -1,48 +1,50 @@
 package tool;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
-import tool.controller.Controller;
-import tool.model.Model;
-import tool.model.connection.SQLConnection;
-import tool.model.formate.BetterExcelFormate;
-import tool.view.View;
+import tool.controller.ControllerTool;
+import tool.model.ModelTool;
+import tool.view.ViewTool;
 
-/*
+/**
  * @authur Odai Al Fadel
- * @Date 24.02.2022
+ * @sincen 22.02.2022
  * @Version 1.0
  */
 
 public class Applikation {
 
 	public static void main(String[] args) {
-		SQLConnection.connect();
-		SQLConnection.onQuery("SELECT SUM(anschaffungs_Preis) AS Summe, bezeichnung, lieferant_ID FROM inventar GROUP BY anschaffungs_Preis ORDER BY lieferant_ID ASC");
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				runApp();
-				View view = new View();
-				view.setVisible(true);
-				
-			}
-		});
+		// ModelTool model = new ModelTool();
+		// model.setConnectionData(new ConnectionData("odai","od","haha","125"));
+		// config.modifyConfigValue(new ConnectionData("odai","od","haha","125"));
+		// System.err.println(model.getListOfFiles("Plugins/DB_Tool/"));
+//		Config c = new Config();
+//		c.readConfigList();
 
+		runApp();
 	}
 
 	public static void runApp() {
-	//	Model model = new Model();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+				}
 
-	//	View view = new View(model);
+				ModelTool model = new ModelTool();
+				ViewTool view = new ViewTool();
+				view.setVisible(true);
+				ControllerTool controller = new ControllerTool(view, model);
+				controller.initController();
+			}
+		});
 
-	//	Controller controller = new Controller(model, view);
 	}
 
 }

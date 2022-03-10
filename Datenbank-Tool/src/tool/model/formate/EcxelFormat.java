@@ -28,15 +28,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import tool.model.formateTyp.ServerFormate;
 
 public class EcxelFormat implements ServerFormate {
-	
+
 	public static int rowIndex = 0;
-	DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-	Date date = new Date();
-	
+	private DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+	private Date date = new Date();
+
 	@Override
 	public void export(ResultSet rs, String filename, String outPut) throws SQLException, IOException {
 
-		
 		/*
 		 * speichere Alle Daten aus der Datenbank in @ResultSetMetaData Variable
 		 */
@@ -137,7 +136,7 @@ public class EcxelFormat implements ServerFormate {
 
 				if (file.exists() && file2.exists()) {
 					file3.getParentFile().mkdirs();
-					
+
 					file3.createNewFile();
 					FileOutputStream fos = new FileOutputStream(file3);
 					book.write(fos);
@@ -167,7 +166,7 @@ public class EcxelFormat implements ServerFormate {
 	/*
 	 * Datum so formatieren: 20210727
 	 */
-	static String datumA() {
+	public static String datumA() {
 		DateFormat dateFo = new SimpleDateFormat("yyyyMMdd");
 		Date dF = new Date();
 		return dateFo.format(dF);

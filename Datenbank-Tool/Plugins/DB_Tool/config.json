@@ -1,1 +1,9 @@
-{"username":"odai","passwort":"124j","serviceName":"serdc","port":"124"}
+[
+  {
+    "datenbank": "odai",
+    "username": "a",
+    "passwort": "jk",
+    "serviceName": "ds",
+    "port": "sdf"
+  }
+]
