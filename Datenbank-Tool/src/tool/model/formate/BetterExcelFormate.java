@@ -6,12 +6,11 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import javax.swing.JOptionPane;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -23,6 +22,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import tool.model.UtilitiesTool;
 import tool.model.formateTyp.ServerFormate;
 
 public class BetterExcelFormate implements ServerFormate {
@@ -33,18 +33,12 @@ public class BetterExcelFormate implements ServerFormate {
 	public int rowIndex = 0;
 
 	@Override
-	public void export(ResultSet rs, String filename, String outPut) throws SQLException, IOException {
+	public void export(ResultSet rs, String filename, String outPut) {
 		this.resultSet = rs;
 
-		String path = outPut + datumA() + "\\";
-		String temp = "";
-		// remove last 4 chars
-		if (filename.contains("txt") || filename.contains("sql")) {
-			temp = filename.substring(0, (filename.length() - 4));
-		}
-		writeHeaderRows(temp);
+		writeHeaderRows(filename);
 		writeDataRows();
-		exportFileXlsx(temp, path);
+		exportFileXlsx(filename, outPut);
 	}
 
 	private List<String> columnsList() {
@@ -96,7 +90,7 @@ public class BetterExcelFormate implements ServerFormate {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e);
 		}
 	}
 
@@ -106,7 +100,7 @@ public class BetterExcelFormate implements ServerFormate {
 		// wenn es Zeilen im Excel-Datei sind
 		try {
 			if (rowIndex != 0) {
-				File file = new File(path + filename + "_" + datumA() + ".xlsx");
+				File file = new File(path + filename + "_" + UtilitiesTool.datumA() + ".xlsx");
 				if (!file.exists()) {
 					file.getParentFile().mkdirs();
 					file.createNewFile();
@@ -115,7 +109,8 @@ public class BetterExcelFormate implements ServerFormate {
 					fos.close();
 
 				} else {
-					System.err.println("Dataei ist vorhanden!");
+					JOptionPane.showMessageDialog(null, "Dataei ist vorhanden!" + filename);
+					// System.err.println("Dataei ist vorhanden!");
 				}
 
 			} else {
@@ -123,8 +118,7 @@ public class BetterExcelFormate implements ServerFormate {
 			}
 
 		} catch (IOException e) {
-			System.out.println("export falsch!");
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e);
 		}
 	}
 
@@ -137,12 +131,5 @@ public class BetterExcelFormate implements ServerFormate {
 		return style;
 	}
 
-	/*
-	 * Datum so formatieren: 20210727
-	 */
-	public static String datumA() {
-		DateFormat dateFo = new SimpleDateFormat("yyyyMMdd");
-		Date dF = new Date();
-		return dateFo.format(dF);
-	}
+	
 }

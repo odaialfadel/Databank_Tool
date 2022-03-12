@@ -1,21 +1,22 @@
 package tool.view;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.border.LineBorder;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class ViewTool extends JFrame {
@@ -23,6 +24,9 @@ public class ViewTool extends JFrame {
 	private JPanel contentPanel;
 	private JButton changeConfigButton;
 	private JButton openFileButton;
+	private JButton addFilesAndConnectionToCollection;
+	
+
 	private JMenuBar menuBar;
 	private JMenu datei;
 	private JMenuItem settingsMenuItem;
@@ -30,14 +34,27 @@ public class ViewTool extends JFrame {
 	private JTextField filePathChooser;
 	
 	private JTextArea uebersichtTextArea;
-
+	private JComboBox<String> connectionComboBox;
 	
+	
+
 
 	private JButton runButton;
 
 	private JButton outputButton;
+	private JLabel loadingLabel;
 
-	private JLabel enterPathLabel;
+	public JLabel getLoadingLabel() {
+		return loadingLabel;
+	}
+
+	public void setLoadingLabel(JLabel loadingLabel) {
+		this.loadingLabel = loadingLabel;
+	}
+
+	private JLabel backgroundLabel;
+
+
 
 	/**
 	 * Create the application.
@@ -56,8 +73,7 @@ public class ViewTool extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setBounds(100, 100, 681, 549);
-
+		setBounds(100, 100, 730, 550);
 		contentPanel = new JPanel();
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -68,16 +84,18 @@ public class ViewTool extends JFrame {
 		uebrsichtPanel.setForeground(Color.GRAY);
 		uebrsichtPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		uebrsichtPanel.setBackground(Color.LIGHT_GRAY);
-		uebrsichtPanel.setBounds(505, 10, 147, 470);
+		uebrsichtPanel.setBounds(535, 10, 171, 471);
+		uebrsichtPanel.setOpaque(false);
 		contentPanel.add(uebrsichtPanel);
 		uebrsichtPanel.setLayout(null);
 
 		JLabel auswertungLabel = new JLabel("Auswertung:");
 		auswertungLabel.setBounds(42, 10, 100, 50);
+		auswertungLabel.setOpaque(false);
 		uebrsichtPanel.add(auswertungLabel);
 		
 		uebersichtTextArea = new JTextArea();
-		uebersichtTextArea.setBounds(10, 64, 127, 396);
+		uebersichtTextArea.setBounds(10, 64, 151, 397);
 		uebersichtTextArea.setOpaque(false);
 		uebersichtTextArea.setLineWrap(true);
 		uebersichtTextArea.setEditable(false);
@@ -87,6 +105,7 @@ public class ViewTool extends JFrame {
 		// Files Path
 		filePathChooser = new JTextField("");
 		filePathChooser.setBounds(10, 104, 275, 27);
+		// filePathChooser.setOpaque(false);
 		contentPanel.add(filePathChooser);
 		filePathChooser.setColumns(10);
 
@@ -113,14 +132,33 @@ public class ViewTool extends JFrame {
 		outputButton.setOpaque(false);
 		outputButton.setBounds(169, 349, 116, 27);
 		contentPanel.add(outputButton);
+		
+		connectionComboBox = new JComboBox<String>();
+		connectionComboBox.setOpaque(false);
+		connectionComboBox.setBounds(138, 141, 147, 27);
+		contentPanel.add(connectionComboBox);
 
-		enterPathLabel = new JLabel("Enter your Path here.");
-		enterPathLabel.setBounds(10, 67, 206, 27);
-		contentPanel.add(enterPathLabel);
+		addFilesAndConnectionToCollection = new JButton("Add");
+		addFilesAndConnectionToCollection.setBounds(306, 141, 116, 27);
+		addFilesAndConnectionToCollection.setOpaque(false);
+		contentPanel.add(addFilesAndConnectionToCollection);
+
+
+
+		loadingLabel = new JLabel("");
+		loadingLabel.setBounds(254, 178, 200, 161);
+		// loadingLabel.setOpaque(false);
+		contentPanel.add(loadingLabel);
+		loadingLabel.setVisible(false);
+
+
+
+
 
 		// Menu
 
 		menuBar = new JMenuBar();
+		menuBar.setBorderPainted(false);
 		datei = new JMenu("Datei");
 		settingsMenuItem = new JMenuItem("Settings");
 		// settingsMenuItem.addActionListener(null);
@@ -128,6 +166,10 @@ public class ViewTool extends JFrame {
 		datei.add(settingsMenuItem);
 		menuBar.add(datei);
 		setJMenuBar(menuBar);
+
+		backgroundLabel = new JLabel("");
+		backgroundLabel.setBounds(0, 0, 716, 490);
+		contentPanel.add(backgroundLabel);
 
 	}
 
@@ -139,6 +181,30 @@ public class ViewTool extends JFrame {
 //		this.menuBar = menuBar;
 //	}
 
+
+	public JLabel getBackgroundLabel() {
+		return backgroundLabel;
+	}
+
+	public void setBackgroundLabel(JLabel backgroundLabel) {
+		this.backgroundLabel = backgroundLabel;
+	}
+	public JLabel getLogo() {
+		return loadingLabel;
+	}
+
+	public void setLogo(JLabel logo) {
+		this.loadingLabel = logo;
+	}
+
+	public JComboBox<String> getConnectionComboBox() {
+		return connectionComboBox;
+	}
+
+	public void setConnectionComboBox(JComboBox<String> connectionComboBox) {
+		this.connectionComboBox = connectionComboBox;
+	}
+
 	public JButton getRunButton() {
 		return runButton;
 	}
@@ -147,13 +213,15 @@ public class ViewTool extends JFrame {
 		this.runButton = runButton;
 	}
 
-	public JLabel getEnterPathLabel() {
-		return enterPathLabel;
+	public JButton getAddFilesAndConnectionToCollection() {
+		return addFilesAndConnectionToCollection;
 	}
 
-	public void setEnterPathLabel(JLabel enterPathLabel) {
-		this.enterPathLabel = enterPathLabel;
+	public void setAddFilesAndConnectionToCollection(JButton addFilesAndConnectionToCollection) {
+		this.addFilesAndConnectionToCollection = addFilesAndConnectionToCollection;
 	}
+
+
 
 	public JMenu getDatei() {
 		return datei;

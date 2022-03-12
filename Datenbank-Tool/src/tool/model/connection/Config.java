@@ -4,142 +4,148 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 
 public class Config {
 
 	private Gson gson = new Gson().newBuilder().setPrettyPrinting().create();
-	private final String configPath = "Plugins//DB_Tool//config.json";
-	private final File file = new File(configPath);
+	private static final String CONFIGPATH = "Plugins//DB_Tool//config.json";
+	private static final File MYFILE = new File(CONFIGPATH);
+	private Map<String, ConnectionData> allConfig;
 
-	/**
-	 * muss implemintiert werden
-	 * 
-	 * @param ConnectionData Datenbank zugaenge
-	 */
-	public void createConfig(ConnectionData connectionData) {
 
-		List<ConnectionData> currentList = new ArrayList<ConnectionData>();
-		if (readConfigList() != null) {
-			if (readConfigList().size() == 0) {
-				file.delete();
+	public Config() {
+		allConfig = readAllConfig();
+	}
+
+	public Map<String, ConnectionData> readAllConfig() {
+		try {
+			if (!MYFILE.exists()) {
+				MYFILE.getParentFile().mkdir();
+				MYFILE.createNewFile();
+				Type mapType = new TypeToken<Map<String, ConnectionData>>() {
+				}.getType();
+				Map<String, ConnectionData> configList = new Gson().fromJson(new FileReader(MYFILE), mapType);
+
+				return configList;
 			}
-			currentList = readConfigList();
-			currentList.add(connectionData);
-		} else {
+			Type mapType = new TypeToken<Map<String, ConnectionData>>() {
+			}.getType();
+			Map<String, ConnectionData> configList = new Gson().fromJson(new FileReader(MYFILE), mapType);
 
-			currentList.add(connectionData);
+			return configList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
+	}
 
-		try (FileWriter fileWriter = new FileWriter(file)) {
-			if (!file.exists()) {
-				file.getParentFile().mkdir();
-				file.createNewFile();
+	public void createConfig(String datenbankName, ConnectionData connectionData) {
+		Map<String, ConnectionData> currentList = new HashMap<String, ConnectionData>();
+
+		if (allConfig != null && !allConfig.isEmpty()) {
+
+			if (datenbankName.equals(getKeyByConfig(connectionData))) {
+				currentList = allConfig;
+				System.err.println("vorhanden!");
+
+				} else {
+
+				currentList = allConfig;
+				currentList.put(datenbankName, connectionData);
+				System.err.println("saved: ");
+			}
+		} else {
+			MYFILE.delete();
+			currentList.put(datenbankName, connectionData);
+			System.out.println("deleted and saved: ");
+		}
+		try (FileWriter fileWriter = new FileWriter(MYFILE)) {
+			if (!MYFILE.exists()) {
+				MYFILE.getParentFile().mkdir();
+				MYFILE.createNewFile();
+
+				fileWriter.write(gson.toJson(currentList));
+				fileWriter.flush();
+				fileWriter.close();
+			} else {
 
 				fileWriter.write(gson.toJson(currentList));
 				fileWriter.flush();
 				fileWriter.close();
 			}
-			fileWriter.write(gson.toJson(currentList));
-			fileWriter.flush();
-			fileWriter.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void createConfigList(List<ConnectionData> connectionDataList) {
-		try (FileWriter fileWriter = new FileWriter(file)) {
-			if (!file.exists()) {
-				file.getParentFile().mkdir();
-				file.createNewFile();
+	public void deleteConfig(String datenbankName) {
+		Map<String, ConnectionData> currentList = new HashMap<String, ConnectionData>();
 
-				fileWriter.write(gson.toJson(connectionDataList));
+		currentList = allConfig;
+		currentList.remove(datenbankName);
+		System.err.println("removed!");
+
+		try (FileWriter fileWriter = new FileWriter(MYFILE)) {
+			if (!MYFILE.exists()) {
+				MYFILE.getParentFile().mkdir();
+				MYFILE.createNewFile();
+
+				fileWriter.write(gson.toJson(currentList));
+				fileWriter.flush();
+				fileWriter.close();
+			} else {
+
+				fileWriter.write(gson.toJson(currentList));
 				fileWriter.flush();
 				fileWriter.close();
 			}
-			fileWriter.write(gson.toJson(connectionDataList));
-			fileWriter.flush();
-			fileWriter.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public ConnectionData readConfig() {
-		try {
-			if (!file.exists()) {
-				/*
-				 * exeption output!
-				 */
-				file.getParentFile().mkdir();
-				file.createNewFile();
-				ConnectionData config = gson.fromJson(new FileReader(file), ConnectionData.class);
-				return config;
+	public ConnectionData getValueByName(String configName) {
+		if (allConfig != null && !allConfig.isEmpty()) {
+			for (Map.Entry<String, ConnectionData> entry : allConfig.entrySet()) {
+				if (configName.equals(entry.getKey().toString())) {
+					System.err.println("there!!!:   " + entry.getKey());
+					return entry.getValue();
+				}
+				System.err.println("not in there!!!:   " + entry.getKey());
+				// return null;
 			}
-			ConnectionData config = gson.fromJson(new FileReader(file), ConnectionData.class);
-			return config;
-		} catch (JsonSyntaxException | JsonIOException | IOException e) {
-			e.printStackTrace();
-			return null;
 		}
+		return null;
+
 	}
 
-	public List<ConnectionData> readConfigList() {
-		try {
-			if (!file.exists()) {
-				/*
-				 * exeption output!
-				 */
-				file.getParentFile().mkdir();
-				file.createNewFile();
-				Type listType = new TypeToken<ArrayList<ConnectionData>>() {
-				}.getType();
-				List<ConnectionData> configList = new Gson().fromJson(new FileReader(file), listType);
-				// List<ConnectionData> configList = gson.fromJson(new FileReader(file),
-				// List.class);
-				// System.err.println(configList);
-				return configList;
+	public String getKeyByConfig(ConnectionData connectionData) {
+		if (allConfig != null && !allConfig.isEmpty()) {
+			for (Map.Entry<String, ConnectionData> entry : allConfig.entrySet()) {
+				if (connectionData.equals(entry.getValue())) {
+					return entry.getKey();
+				}
+				System.err.println("not in there!!!");
+				return null;
 			}
-			Type listType = new TypeToken<ArrayList<ConnectionData>>() {
-			}.getType();
-			List<ConnectionData> configList = new Gson().fromJson(new FileReader(file), listType);
-			// List<ConnectionData> configList = gson.fromJson(new FileReader(file),
-			// List.class);
-			// System.err.println(configList);
-			return configList;
-		} catch (JsonSyntaxException | JsonIOException | IOException e) {
-			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
-	public void modifyConfigValue(ConnectionData connectionData) {
+	public Map<String, ConnectionData> getAllConfig() {
+		return allConfig;
+	}
 
-		// copy the the existing config to new object
-		// ConnectionData newJsonConfig = readConfig();
-		/*
-		 * ConnectionData newJsonConfig = connectionData;
-		 * 
-		 * // modify the value depend on the user data
-		 * newJsonConfig.setDatenbank(connectionData.getDatenbank());
-		 * newJsonConfig.setUsername(connectionData.getUsername());
-		 * newJsonConfig.setPasswort(connectionData.getPasswort());
-		 * newJsonConfig.setServiceName(connectionData.getServiceName());
-		 * newJsonConfig.setPort(connectionData.getPort());
-		 * 
-		 * // convert the object to json file createConfig(newJsonConfig);
-		 */
-		createConfig(connectionData);
+	public void setAllConfig(Map<String, ConnectionData> allConfig) {
+		this.allConfig = allConfig;
 	}
 
 }

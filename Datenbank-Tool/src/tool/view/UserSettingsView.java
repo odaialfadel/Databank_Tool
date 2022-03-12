@@ -2,21 +2,14 @@ package tool.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import tool.model.ModelTool;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class UserSettingsView extends JDialog {
@@ -28,77 +21,67 @@ public class UserSettingsView extends JDialog {
 	private JTextField portText;
 	private JTextField datenbankText;
 	
-	@SuppressWarnings("rawtypes")
-	private JComboBox comboBox;
+
+
+	private JComboBox<String> connectionComboBox;
 	private JButton saveButton;
 	private JButton cancelButton;
+	private JButton deleteButton;
+	private JButton testConnection;
 
-	/**
-	 * Launch the application.
-	 
-	public static void main(String[] args) {
-		try {
-			UserSettings dialog = new UserSettings();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
 
 	/**
 	 * Create the dialog.
 	 */
-	@SuppressWarnings("rawtypes")
 	public UserSettingsView() {
-		setBounds(100, 100, 301, 300);
+		setBounds(100, 100, 346, 269);
 		getContentPane().setLayout(new BorderLayout(0,0));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
 		JLabel userNameLabel = new JLabel("Username");
-		userNameLabel.setBounds(10, 46, 78, 22);
+		userNameLabel.setBounds(35, 47, 78, 22);
 		contentPanel.add(userNameLabel);
 		
 		JLabel passwortLabel = new JLabel("Passwort");
-		passwortLabel.setBounds(10, 79, 78, 21);
+		passwortLabel.setBounds(35, 79, 78, 21);
 		contentPanel.add(passwortLabel);
 		
 		JLabel serviceLabel = new JLabel("Service");
-		serviceLabel.setBounds(10, 110, 78, 22);
+		serviceLabel.setBounds(35, 111, 78, 22);
 		contentPanel.add(serviceLabel);
 		
 		JLabel portLabel = new JLabel("Port");
-		portLabel.setBounds(10, 143, 78, 21);
+		portLabel.setBounds(35, 143, 78, 21);
 		contentPanel.add(portLabel);
 		
 		usernameText = new JTextField();
-		usernameText.setBounds(98, 48, 125, 19);
+		usernameText.setBounds(152, 48, 125, 19);
 		contentPanel.add(usernameText);
 		usernameText.setColumns(10);
 		
 		passwortText = new JTextField();
-		passwortText.setBounds(98, 80, 125, 19);
+		passwortText.setBounds(152, 80, 125, 19);
 		contentPanel.add(passwortText);
 		passwortText.setColumns(10);
 		
 		serviceText = new JTextField();
-		serviceText.setBounds(98, 112, 125, 19);
+		serviceText.setBounds(152, 112, 125, 19);
 		contentPanel.add(serviceText);
 		serviceText.setColumns(10);
 		
 		portText = new JTextField();
-		portText.setBounds(98, 144, 125, 19);
+		portText.setBounds(152, 144, 125, 19);
 		contentPanel.add(portText);
 		portText.setColumns(10);
 		
 		JLabel datenbankName = new JLabel("Datenbank");
-		datenbankName.setBounds(10, 10, 78, 22);
+		datenbankName.setBounds(35, 10, 78, 22);
 		contentPanel.add(datenbankName);
 		
 		datenbankText = new JTextField();
-		datenbankText.setBounds(98, 12, 125, 19);
+		datenbankText.setBounds(152, 12, 125, 19);
 		contentPanel.add(datenbankText);
 		datenbankText.setColumns(10);
 		{
@@ -106,14 +89,11 @@ public class UserSettingsView extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			
-//			//comboBox = new JComboBox(ModelTool.getListOfFiles("Plugins/DB_Tool/"));
-//			if(ModelTool.getConnections()!=null) {
-//				comboBox = new JComboBox(ModelTool.getConnections());
-//			}else {
-//				comboBox = new JComboBox();
-//			}
-			comboBox = new JComboBox();
-			buttonPane.add(comboBox);
+			connectionComboBox = new JComboBox<String>();
+			buttonPane.add(connectionComboBox);
+
+			deleteButton = new JButton("remove");
+			buttonPane.add(deleteButton);
 			{
 				saveButton = new JButton("Save");
 				
@@ -121,6 +101,9 @@ public class UserSettingsView extends JDialog {
 				buttonPane.add(saveButton);
 				getRootPane().setDefaultButton(saveButton);
 			}
+
+			testConnection = new JButton("Test");
+			buttonPane.add(testConnection);
 			{
 				cancelButton = new JButton("Cancel");
 				cancelButton.setActionCommand("Cancel");
@@ -128,6 +111,14 @@ public class UserSettingsView extends JDialog {
 			}
 		}
 		setVisible(true);
+		}
+
+		public JButton getDeleteButton() {
+			return deleteButton;
+		}
+
+		public void setDeleteButton(JButton deleteButton) {
+			this.deleteButton = deleteButton;
 		}
 
 	public JTextField getDatenbankText() {
@@ -170,12 +161,12 @@ public class UserSettingsView extends JDialog {
 		this.portText = portText;
 	}
 
-	public JComboBox getComboBox() {
-		return comboBox;
+	public JComboBox<String> getConnectionComboBox() {
+		return connectionComboBox;
 	}
 
-	public void setComboBox(JComboBox comboBox) {
-		this.comboBox = comboBox;
+	public void setConnectionComboBox(JComboBox<String> comboBox) {
+		this.connectionComboBox = comboBox;
 	}
 
 	public JButton getSaveButton() {
@@ -193,5 +184,22 @@ public class UserSettingsView extends JDialog {
 	public void setCancelButton(JButton cancelButton) {
 		this.cancelButton = cancelButton;
 	}
+
+
+
+	public JButton getTestConnection() {
+		return testConnection;
+	}
+
+	public void setTestConnection(JButton testConnection) {
+		this.testConnection = testConnection;
+	}
 	
+	public void resetTextFelder() {
+		getDatenbankText().setText("");
+		getUsernameText().setText("");
+		getPasswortText().setText("");
+		getServiceNameText().setText("");
+		getPortText().setText("");
+	}
 }

@@ -1,9 +1,30 @@
-[
-  {
+{
+  "odai": {
     "datenbank": "odai",
-    "username": "a",
-    "passwort": "jk",
-    "serviceName": "ds",
-    "port": "sdf"
+    "username": "root",
+    "passwort": "",
+    "serviceName": "localhost",
+    "port": "3306"
+  },
+  "test": {
+    "datenbank": "test",
+    "username": "root",
+    "passwort": "",
+    "serviceName": "localhost",
+    "port": "3306"
+  },
+  "testJava": {
+    "datenbank": "testJava",
+    "username": "root",
+    "passwort": "",
+    "serviceName": "localhost",
+    "port": "3306"
+  },
+  "ggg": {
+    "datenbank": "ggg",
+    "username": "root",
+    "passwort": "",
+    "serviceName": "localhost",
+    "port": "3306"
   }
-]
+}

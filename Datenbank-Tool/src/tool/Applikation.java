@@ -1,8 +1,8 @@
 package tool;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import tool.controller.ControllerTool;
 import tool.model.ModelTool;
@@ -17,12 +17,9 @@ import tool.view.ViewTool;
 public class Applikation {
 
 	public static void main(String[] args) {
-		// ModelTool model = new ModelTool();
-		// model.setConnectionData(new ConnectionData("odai","od","haha","125"));
-		// config.modifyConfigValue(new ConnectionData("odai","od","haha","125"));
-		// System.err.println(model.getListOfFiles("Plugins/DB_Tool/"));
-//		Config c = new Config();
-//		c.readConfigList();
+//		Config config = new Config();
+//		config.createConfig("odai", new ConnectionData("odai", "ll", "ll", "ll", "ll"));
+//		config.deleteConfig("fgfg");
 
 		runApp();
 	}
@@ -32,9 +29,8 @@ public class Applikation {
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-						| UnsupportedLookAndFeelException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e);
 				}
 
 				ModelTool model = new ModelTool();
