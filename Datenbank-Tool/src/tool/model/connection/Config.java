@@ -86,10 +86,8 @@ public class Config {
 	}
 
 	public void deleteConfig(String datenbankName) {
-		Map<String, ConnectionData> currentList = new HashMap<String, ConnectionData>();
 
-		currentList = allConfig;
-		currentList.remove(datenbankName);
+		allConfig.remove(datenbankName);
 		System.err.println("removed!");
 
 		try (FileWriter fileWriter = new FileWriter(MYFILE)) {
@@ -97,12 +95,12 @@ public class Config {
 				MYFILE.getParentFile().mkdir();
 				MYFILE.createNewFile();
 
-				fileWriter.write(gson.toJson(currentList));
+				fileWriter.write(gson.toJson(allConfig));
 				fileWriter.flush();
 				fileWriter.close();
 			} else {
 
-				fileWriter.write(gson.toJson(currentList));
+				fileWriter.write(gson.toJson(allConfig));
 				fileWriter.flush();
 				fileWriter.close();
 			}

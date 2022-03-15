@@ -2,9 +2,9 @@
   "odai": {
     "datenbank": "odai",
     "username": "root",
-    "passwort": "",
-    "serviceName": "localhost",
-    "port": "3306"
+    "passwort": "1234",
+    "serviceName": "serv",
+    "port": "125"
   },
   "test": {
     "datenbank": "test",
@@ -20,11 +20,18 @@
     "serviceName": "localhost",
     "port": "3306"
   },
-  "ggg": {
-    "datenbank": "ggg",
+  "test22": {
+    "datenbank": "test22",
     "username": "root",
-    "passwort": "",
+    "passwort": "12345",
     "serviceName": "localhost",
     "port": "3306"
+  },
+  "wer": {
+    "datenbank": "wer",
+    "username": "wer",
+    "passwort": "[C@2f98009f",
+    "serviceName": "rwe",
+    "port": "rwer"
   }
 }

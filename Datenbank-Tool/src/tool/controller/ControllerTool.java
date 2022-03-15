@@ -2,10 +2,8 @@ package tool.controller;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,16 +24,13 @@ import tool.view.ViewTool;
 
 public class ControllerTool {
 
-	/**
-	 * TODO scrolbar textArea
-	 */
 
 	private ViewTool viewTool;
 	private ModelTool modelTool;
-	private UserSettingsView userSettings;
+	private UserSettingsView userSettingsView;
 
 	// Excel-Files output folder
-	private final String OUTPUTPATH = "output//" + UtilitiesTool.datumA() + "\\";
+	private final String OUTPUTPATH = "output//" + UtilitiesTool.formatDate() + "\\";
 
 	private Map<ConnectionData, List<File>> listOfConnAndFiles = new HashMap<ConnectionData, List<File>>();;
 
@@ -50,7 +45,6 @@ public class ControllerTool {
 		// get the config and put it in a combobox of the main View
 		addElementsToCombo(viewTool);
 
-		viewTool.getBackgroundLabel().setIcon(new ImageIcon("src\\tool\\img\\home3.jpg"));
 		// to choose file and listen to it
 		viewTool.getOpenFileButton().addActionListener(e -> chooseFile());
 
@@ -61,12 +55,13 @@ public class ControllerTool {
 
 		// to set new Config and save it
 		viewTool.getSettingsMenuItem().addActionListener(e -> settingsDialog());
+		// viewTool.getSettingsMenu().addActionListener(e -> settingsDialog());
 
 		// run Button
 		viewTool.getRunButton().addActionListener(e -> excuteAllStatements());
 
 		// Output
-		viewTool.getOutputButton().addActionListener(e -> openFolder());
+		viewTool.getOutputButton().addActionListener(e -> openOutputFolder());
 
 	}
 
@@ -109,25 +104,9 @@ public class ControllerTool {
 		viewTool.getLoadingLabel().setVisible(true);
 
 		for (ConnectionData entryKey : listOfConnAndFiles.keySet()) {
-
-			// create Connection
-			try {
-				if (MySQLConnection.connect(entryKey) != null) {
-					MySQLConnection.connect(entryKey);
-				} else if (OracleSqlDeveloper.connect(entryKey) != null) {
-					OracleSqlDeveloper.connect(entryKey);
-				}
-
-			} catch (SQLException e1) {
-				JOptionPane.showMessageDialog(null, "Connection Faild!, please check your Configuration!");
-				e1.printStackTrace();
-			}
-
-			// for (List<File> entryValueList : listOfConnAndFiles.values()) {
+			checkConnection(entryKey);
 			for (int i = 0; i < listOfConnAndFiles.get(entryKey).size(); i++) {
-
 				try {
-
 					modelTool.getToExcel().export(
 							MySQLConnection.execQuery(Files
 									.readString(Paths.get(listOfConnAndFiles.get(entryKey).get(i).getAbsolutePath()))),
@@ -135,99 +114,126 @@ public class ControllerTool {
 							OUTPUTPATH + entryKey.getDatenbank() + "//");
 
 					// Test rowIndex
-					System.err.println("Done!  " + modelTool.getToExcel().rowIndex);
+					System.err.println("Done!  " + modelTool.getToExcel().getRowIndex());
 
 					// View all rows from the Files
 					viewTool.getUebersichtTextArea()
 							.setText(viewTool.getUebersichtTextArea().getText()
 									+ UtilitiesTool
 											.removeFileExtension(listOfConnAndFiles.get(entryKey).get(i).getName())
-									+ ": " + modelTool.getToExcel().rowIndex + "\n");
+									+ ": " + modelTool.getToExcel().getRowIndex() + "\n");
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, e);
 				}
-
 			}
-
-			// }
 			// Close Connection
 
-			MySQLConnection.desconnect();
-			// viewTool.getLoadingLabel().setVisible(false);
-
+			MySQLConnection.disconnect();
 		}
-
 		viewTool.getLoadingLabel().setIcon(new ImageIcon("src\\tool\\img\\dance.gif"));
 		viewTool.getLoadingLabel().setVisible(true);
-
 	}
 
-	private void openFolder() {
+	/**
+	 * check to which connection belongs that Statement
+	 * 
+	 * @param entryKey
+	 */
+	private void checkConnection(ConnectionData entryKey) {
+		if (MySQLConnection.connect(entryKey) != null) {
+			MySQLConnection.connect(entryKey);
+		} else if (OracleSqlDeveloper.connect(entryKey) != null) {
+			OracleSqlDeveloper.connect(entryKey);
+		}
+	}
+
+	private void openOutputFolder() {
+		File file = new File(OUTPUTPATH);
 		try {
-			Desktop.getDesktop().open(new File(OUTPUTPATH));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// check if the folder created if not then create new one
+			if (!file.exists()) {
+				file.mkdir();
+				Desktop.getDesktop().open(file);
+			}
+			Desktop.getDesktop().open(file);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Path doesen't exist!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	// damit die JDialog geöffnet werden kann
 	private void settingsDialog() {
 
-		userSettings = new UserSettingsView();
-		addElementsToCombo(userSettings);
+		userSettingsView = new UserSettingsView();
+
+		addElementsToCombo(userSettingsView);
 
 		// save the new Settings
-		userSettings.getSaveButton().addActionListener(e -> saveConfig());
+		userSettingsView.getSaveButton().addActionListener(e -> saveConfig());
 
 		// Comboox
-		userSettings.getConnectionComboBox().addActionListener(e -> selectComboToShowData());
+		userSettingsView.getConnectionComboBox().addActionListener(e -> selectComboToShowData());
 
 		// remove Config button
-		userSettings.getDeleteButton().addActionListener(e -> deleteConfig());
+		userSettingsView.getDeleteButton().addActionListener(e -> deleteConfig());
 
 		// Test the Connection
-		userSettings.getTestConnection().addActionListener(e -> testSelectedConnection());
+		userSettingsView.getTestConnection().addActionListener(e -> testSelectedConnection());
+
+		// show passwort
+		userSettingsView.getShowButton().addActionListener(e -> showPasswort());
 
 		// close JDialog with dispose methode
-		userSettings.getCancelButton().addActionListener(e -> userSettings.dispose());
+		userSettingsView.getCancelButton().addActionListener(e -> userSettingsView.dispose());
 
 	}
 
-	private void testSelectedConnection() {
-		String selectedItem = userSettings.getConnectionComboBox().getSelectedItem().toString();
-		if (selectedItem != null) {
-			try {
-				if (MySQLConnection.connect(modelTool.getConnectionDataList().get(selectedItem)) != null) {
-					MySQLConnection.connect(modelTool.getConnectionDataList().get(selectedItem));
-				} else if (OracleSqlDeveloper.connect(modelTool.getConnectionDataList().get(selectedItem)) != null) {
-					OracleSqlDeveloper.connect(modelTool.getConnectionDataList().get(selectedItem));
-				}
+	private void showPasswort() {
 
-				modelTool.getConnectionDataList().get(selectedItem);
-				// System.err.println("Connection sucess!");
-				modelTool.setIcon(new ImageIcon("src\\tool\\img\\success.gif"));
-				JOptionPane.showMessageDialog(null, "Connection sucess!", "Info", JOptionPane.INFORMATION_MESSAGE,
-						modelTool.getIcon());
-			} catch (SQLException e) {
-				JOptionPane.showMessageDialog(null, "Connection faild!", "Error", JOptionPane.ERROR_MESSAGE);
-				// System.out.println("Connection faild");
+		if (userSettingsView.getPasswortText().getPassword().length > 0) {
+			if (userSettingsView.getShowButton().getText().equals("show")) {
+				userSettingsView.getPasswortText().setEchoChar(((char) 0));
+				userSettingsView.getShowButton().setText("hide");
+			} else {
+				userSettingsView.getShowButton().setText("show");
+				userSettingsView.getPasswortText().setEchoChar('\u25cf');
 			}
+		}
+	}
+
+	private void testSelectedConnection() {
+		String selectedItem = userSettingsView.getConnectionComboBox().getSelectedItem().toString();
+		//modelTool.setIcon(new ImageIcon("src\\tool\\img\\success.gif"));
+		if (selectedItem != null) {
+			if (MySQLConnection.connect(modelTool.getConnectionDataList().get(selectedItem)) != null) {
+				MySQLConnection.connect(modelTool.getConnectionDataList().get(selectedItem));
+				JOptionPane.showMessageDialog(null, "Connection sucess!", "Info", JOptionPane.INFORMATION_MESSAGE,
+						UtilitiesTool.setIcon("success.gif"));
+			} else if (OracleSqlDeveloper.connect(modelTool.getConnectionDataList().get(selectedItem)) != null) {
+				OracleSqlDeveloper.connect(modelTool.getConnectionDataList().get(selectedItem));
+				JOptionPane.showMessageDialog(null, "Connection sucess!", "Info", JOptionPane.INFORMATION_MESSAGE,
+						UtilitiesTool.setIcon("success.gif"));
+			} else {
+				JOptionPane.showMessageDialog(null, "Connection faild!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+
+			modelTool.getConnectionDataList().get(selectedItem);
+
 		}
 	}
 
 	private void deleteConfig() {
 		// System.err.println(userSettings.getConnectionComboBox().getSelectedItem().toString());
-		modelTool.getConfig().deleteConfig(userSettings.getConnectionComboBox().getSelectedItem().toString());
-		userSettings.resetTextFelder();
+		modelTool.getConfig().deleteConfig(userSettingsView.getConnectionComboBox().getSelectedItem().toString());
+		userSettingsView.resetTextFelder();
 
 		// Delete the deleted config from combobox
-		userSettings.getConnectionComboBox()
-				.removeItem(userSettings.getConnectionComboBox().getSelectedItem().toString());
-		viewTool.getConnectionComboBox().removeItem(userSettings.getConnectionComboBox().getSelectedItem().toString());
-
+		userSettingsView.getConnectionComboBox()
+				.removeItem(userSettingsView.getConnectionComboBox().getSelectedItem().toString());
+		viewTool.getConnectionComboBox()
+				.removeItem(userSettingsView.getConnectionComboBox().getSelectedItem().toString());
 	}
 
 	private void selectComboToShowData() {
@@ -235,17 +241,14 @@ public class ControllerTool {
 		 * show data as selected combobox
 		 */
 		for (Map.Entry<String, ConnectionData> entry : modelTool.getConnectionDataList().entrySet()) {
-			if (entry.getKey().equals(userSettings.getConnectionComboBox().getSelectedItem().toString())) {
-				userSettings.getDatenbankText().setText(entry.getValue().getDatenbank());
-				userSettings.getUsernameText().setText(entry.getValue().getUsername());
-				userSettings.getPasswortText().setText(entry.getValue().getPasswort());
-				userSettings.getServiceNameText().setText(entry.getValue().getServiceName());
-				userSettings.getPortText().setText(entry.getValue().getPort());
+			if (entry.getKey().equals(userSettingsView.getConnectionComboBox().getSelectedItem().toString())) {
+				userSettingsView.getDatenbankText().setText(entry.getValue().getDatenbank());
+				userSettingsView.getUsernameText().setText(entry.getValue().getUsername());
+				userSettingsView.getPasswortText().setText(entry.getValue().getPasswort());
+				userSettingsView.getServiceNameText().setText(entry.getValue().getServiceName());
+				userSettingsView.getPortText().setText(entry.getValue().getPort());
 			}
 		}
-
-		// }
-
 	}
 
 	/**
@@ -254,17 +257,18 @@ public class ControllerTool {
 	private void saveConfig() {
 
 		// Add new config
-		modelTool.setConnectionData(userSettings.getDatenbankText().getText(),
-				new ConnectionData(userSettings.getDatenbankText().getText(), userSettings.getUsernameText().getText(),
-						userSettings.getPasswortText().getText(), userSettings.getServiceNameText().getText(),
-						userSettings.getPortText().getText()));
+		modelTool.setConnectionData(userSettingsView.getDatenbankText().getText(),
+				new ConnectionData(userSettingsView.getDatenbankText().getText(),
+						userSettingsView.getUsernameText().getText(),
+						userSettingsView.getPasswortText().getPassword().toString(),
+						userSettingsView.getServiceNameText().getText(), userSettingsView.getPortText().getText()));
 
 		// update combo
-		userSettings.getConnectionComboBox().addItem(userSettings.getDatenbankText().getText().toString());
-		viewTool.getConnectionComboBox().addItem(userSettings.getDatenbankText().getText().toString());
+		userSettingsView.getConnectionComboBox().addItem(userSettingsView.getDatenbankText().getText().toString());
+		viewTool.getConnectionComboBox().addItem(userSettingsView.getDatenbankText().getText().toString());
 
 		// reset TextFelder
-		userSettings.resetTextFelder();
+		userSettingsView.resetTextFelder();
 	}
 
 	private void chooseFile() {
@@ -298,13 +302,11 @@ public class ControllerTool {
 
 			if (obj instanceof ViewTool) {
 				for (Map.Entry<String, ConnectionData> entry : modelTool.getConnectionDataList().entrySet()) {
-					// viewTool.getConnectionComboBox().removeAll();
 					viewTool.getConnectionComboBox().addItem(entry.getKey());
 				}
 			} else if (obj instanceof UserSettingsView) {
 				for (Map.Entry<String, ConnectionData> entry : modelTool.getConnectionDataList().entrySet()) {
-					// userSettings.getConnectionComboBox().removeAll();
-					userSettings.getConnectionComboBox().addItem(entry.getKey());
+					userSettingsView.getConnectionComboBox().addItem(entry.getKey());
 				}
 			}
 

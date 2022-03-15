@@ -2,9 +2,9 @@ package tool.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -13,6 +13,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -22,9 +23,7 @@ import javax.swing.border.LineBorder;
 public class ViewTool extends JFrame {
 
 	private JPanel contentPanel;
-	private JButton changeConfigButton;
-	private JButton openFileButton;
-	private JButton addFilesAndConnectionToCollection;
+	private JButton changeConfigButton, runButton, openFileButton, addFilesAndConnectionToCollection, outputButton;
 	
 
 	private JMenuBar menuBar;
@@ -35,14 +34,9 @@ public class ViewTool extends JFrame {
 	
 	private JTextArea uebersichtTextArea;
 	private JComboBox<String> connectionComboBox;
-	
-	
+	private JLabel loadingLabel, auswertungLabel, backgroundLabel;
+	private JScrollPane scrollPane;
 
-
-	private JButton runButton;
-
-	private JButton outputButton;
-	private JLabel loadingLabel;
 
 	public JLabel getLoadingLabel() {
 		return loadingLabel;
@@ -52,14 +46,12 @@ public class ViewTool extends JFrame {
 		this.loadingLabel = loadingLabel;
 	}
 
-	private JLabel backgroundLabel;
-
-
 
 	/**
 	 * Create the application.
 	 */
 	public ViewTool() {
+
 		initialize();
 	}
 
@@ -72,6 +64,7 @@ public class ViewTool extends JFrame {
 		setTitle("Datenbank Tool");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ViewTool.class.getResource("/tool/img/mainIcon.png")));
 
 		setBounds(100, 100, 730, 550);
 		contentPanel = new JPanel();
@@ -89,29 +82,35 @@ public class ViewTool extends JFrame {
 		contentPanel.add(uebrsichtPanel);
 		uebrsichtPanel.setLayout(null);
 
-		JLabel auswertungLabel = new JLabel("Auswertung:");
-		auswertungLabel.setBounds(42, 10, 100, 50);
+		auswertungLabel = new JLabel("Auswertung:");
+		auswertungLabel.setBounds(42, 0, 100, 50);
 		auswertungLabel.setOpaque(false);
 		uebrsichtPanel.add(auswertungLabel);
 		
+		scrollPane = new JScrollPane();
+		scrollPane.setViewportBorder(null);
+		scrollPane.setBounds(10, 34, 151, 427);
+
+		// make tranperent scrollpan
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setOpaque(false);
+		uebrsichtPanel.add(scrollPane);
+
 		uebersichtTextArea = new JTextArea();
-		uebersichtTextArea.setBounds(10, 64, 151, 397);
+		scrollPane.setViewportView(uebersichtTextArea);
+
+		// scrollPane.setBackground(new Color(0, 0, 0, 0));
 		uebersichtTextArea.setOpaque(false);
 		uebersichtTextArea.setLineWrap(true);
 		uebersichtTextArea.setEditable(false);
 		uebersichtTextArea.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		uebrsichtPanel.add(uebersichtTextArea);
 
 		// Files Path
 		filePathChooser = new JTextField("");
 		filePathChooser.setBounds(10, 104, 275, 27);
-		// filePathChooser.setOpaque(false);
 		contentPanel.add(filePathChooser);
 		filePathChooser.setColumns(10);
 
-//		changeConfigButton = new JButton("username");
-//		changeConfigButton.setBounds(163, 115, 85, 21);
-//		getContentPane().add(changeConfigButton);
 
 		// Button
 		openFileButton = new JButton("Choose Folder");
@@ -120,10 +119,6 @@ public class ViewTool extends JFrame {
 		contentPanel.add(openFileButton);
 
 		runButton = new JButton("Run");
-		runButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		runButton.setOpaque(false);
 		runButton.setBounds(306, 349, 116, 27);
 		contentPanel.add(runButton);
@@ -161,13 +156,16 @@ public class ViewTool extends JFrame {
 		menuBar.setBorderPainted(false);
 		datei = new JMenu("Datei");
 		settingsMenuItem = new JMenuItem("Settings");
-		// settingsMenuItem.addActionListener(null);
+		settingsMenuItem.setBorderPainted(true);
 
-		datei.add(settingsMenuItem);
-		menuBar.add(datei);
+
+
+		// datei.add(settingsMenuItem);
+		menuBar.add(settingsMenuItem);
 		setJMenuBar(menuBar);
 
 		backgroundLabel = new JLabel("");
+		backgroundLabel.setIcon(new ImageIcon(ViewTool.class.getResource("/tool/img/home3.jpg")));
 		backgroundLabel.setBounds(0, 0, 716, 490);
 		contentPanel.add(backgroundLabel);
 

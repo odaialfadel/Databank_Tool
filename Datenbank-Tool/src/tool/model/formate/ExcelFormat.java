@@ -25,12 +25,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import tool.model.UtilitiesTool;
 import tool.model.formateTyp.ServerFormate;
 
-public class BetterExcelFormate implements ServerFormate {
+public class ExcelFormat implements ServerFormate {
 
 	private Workbook book;
 	private Sheet sheet;
 	private ResultSet resultSet;
-	public int rowIndex = 0;
+	private int rowIndex = 0;
+
 
 	@Override
 	public void export(ResultSet rs, String filename, String outPut) {
@@ -100,7 +101,7 @@ public class BetterExcelFormate implements ServerFormate {
 		// wenn es Zeilen im Excel-Datei sind
 		try {
 			if (rowIndex != 0) {
-				File file = new File(path + filename + "_" + UtilitiesTool.datumA() + ".xlsx");
+				File file = new File(path + filename + "_" + UtilitiesTool.formatDate() + ".xlsx");
 				if (!file.exists()) {
 					file.getParentFile().mkdirs();
 					file.createNewFile();
@@ -109,8 +110,8 @@ public class BetterExcelFormate implements ServerFormate {
 					fos.close();
 
 				} else {
-					JOptionPane.showMessageDialog(null, "Dataei ist vorhanden!" + filename);
-					// System.err.println("Dataei ist vorhanden!");
+					// JOptionPane.showMessageDialog(null, "Dataei ist vorhanden!" + filename);
+					System.err.println("Dataei ist vorhanden!");
 				}
 
 			} else {
@@ -131,5 +132,12 @@ public class BetterExcelFormate implements ServerFormate {
 		return style;
 	}
 
-	
+	public int getRowIndex() {
+		return rowIndex;
+	}
+
+	public void setRowIndex(int rowIndex) {
+		this.rowIndex = rowIndex;
+	}
+
 }

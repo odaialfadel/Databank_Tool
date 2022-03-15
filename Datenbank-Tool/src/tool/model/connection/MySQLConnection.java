@@ -18,22 +18,33 @@ public class MySQLConnection {
 	 * @return ResultSet
 	 * @throws SQLException
 	 */
-	public static ResultSet execQuery(String sql) throws SQLException {
+	public static ResultSet execQuery(String sql) {
+		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			return rs;
+
+		} catch (SQLException e) {
+			return null;
+		}
+
 	}
 
-	public static Connection connect(ConnectionData connectionData) throws SQLException {
+	public static Connection connect(ConnectionData connectionData) {
 
+		try {
 			conn = DriverManager.getConnection(
 					"jdbc:mysql://" + connectionData.getServiceName() + ":" + connectionData.getPort() + "/"
 							+ connectionData.getDatenbank(),
 					connectionData.getUsername(), connectionData.getPasswort());
-		return conn;
+			return conn;
+		} catch (SQLException e) {
+			return null;
+		}
+
 	}
 
-	public static void desconnect() {
+	public static void disconnect() {
 		try {
 			conn.close();
 		} catch (SQLException e) {

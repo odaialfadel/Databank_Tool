@@ -21,5 +21,6 @@
 	<classpathentry exported="true" kind="lib" path="C:/Users/odaia/eclipse-workspace/Datenbank-Tool/lib/gson-2.9.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/odaia/eclipse-workspace/Datenbank-Tool/lib/mysql-connector-java-8.0.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/odaia/eclipse-workspace/Datenbank-Tool/lib/protobuf-java-2.6.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
