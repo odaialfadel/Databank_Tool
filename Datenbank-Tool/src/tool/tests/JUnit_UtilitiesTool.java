@@ -26,8 +26,8 @@ public class JUnit_UtilitiesTool {
 	@Test
 	public void test_formatDate() {
 		String newString = UtilitiesTool.formatDate();
-		assertFalse("2022.03.15".equals(newString));
-		assertEquals("20220315", newString);
+		assertFalse("2022.03.16".equals(newString));
+		assertEquals("20220317", newString);
 	}
 
 	// Test my remove Extension function

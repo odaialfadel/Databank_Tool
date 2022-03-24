@@ -107,21 +107,21 @@ public class ControllerTool {
 			checkConnection(entryKey);
 			for (int i = 0; i < listOfConnAndFiles.get(entryKey).size(); i++) {
 				try {
-					modelTool.getToExcel().export(
+					modelTool.getFileOutputFormt().export(
 							MySQLConnection.execQuery(Files
 									.readString(Paths.get(listOfConnAndFiles.get(entryKey).get(i).getAbsolutePath()))),
 							UtilitiesTool.removeFileExtension(listOfConnAndFiles.get(entryKey).get(i).getName()),
 							OUTPUTPATH + entryKey.getDatenbank() + "//");
 
 					// Test rowIndex
-					System.err.println("Done!  " + modelTool.getToExcel().getRowIndex());
+					System.err.println("Done!  " + modelTool.getFileOutputFormt().getRowIndex());
 
 					// View all rows from the Files
 					viewTool.getUebersichtTextArea()
 							.setText(viewTool.getUebersichtTextArea().getText()
 									+ UtilitiesTool
 											.removeFileExtension(listOfConnAndFiles.get(entryKey).get(i).getName())
-									+ ": " + modelTool.getToExcel().getRowIndex() + "\n");
+									+ ": " + modelTool.getFileOutputFormt().getRowIndex() + "\n");
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

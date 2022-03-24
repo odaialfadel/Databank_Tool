@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -27,7 +26,7 @@ public class ViewTool extends JFrame {
 	
 
 	private JMenuBar menuBar;
-	private JMenu datei;
+	// private JMenu datei;
 	private JMenuItem settingsMenuItem;
 	private JPanel uebrsichtPanel;
 	private JTextField filePathChooser;
@@ -154,7 +153,7 @@ public class ViewTool extends JFrame {
 
 		menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
-		datei = new JMenu("Datei");
+		// datei = new JMenu("Datei");
 		settingsMenuItem = new JMenuItem("Settings");
 		settingsMenuItem.setBorderPainted(true);
 
@@ -221,13 +220,13 @@ public class ViewTool extends JFrame {
 
 
 
-	public JMenu getDatei() {
-		return datei;
-	}
-
-	public void setDatei(JMenu datei) {
-		this.datei = datei;
-	}
+//	public JMenu getDatei() {
+//		return datei;
+//	}
+//
+//	public void setDatei(JMenu datei) {
+//		this.datei = datei;
+//	}
 
 	public JMenuItem getSettingsMenuItem() {
 		return settingsMenuItem;

@@ -7,17 +7,18 @@ import java.util.Map;
 import tool.model.connection.Config;
 import tool.model.connection.ConnectionData;
 import tool.model.formate.ExcelFormat;
+import tool.model.formateTyp.ServerFormat;
 
 public class ModelTool {
 
 
 	private Config config;
 	private List<File> fileList;
-	private ExcelFormat toExcel;
+	private ServerFormat fileOutputFormt;
 
 	public ModelTool() {
 		config = new Config();
-		toExcel = new ExcelFormat();
+		fileOutputFormt = new ExcelFormat();
 	}
 
 	public void setConnectionData(String datenbankName, ConnectionData connectionData) {
@@ -44,13 +45,14 @@ public class ModelTool {
 		this.fileList = fileListe;
 	}
 
-	public ExcelFormat getToExcel() {
-		return toExcel;
+	public ServerFormat getFileOutputFormt() {
+		return fileOutputFormt;
 	}
 
-	public void setToExcel(ExcelFormat toExcel) {
-		this.toExcel = toExcel;
+	public void setFileOutputFormt(ServerFormat fileOutputFormt) {
+		this.fileOutputFormt = fileOutputFormt;
 	}
+
 
 
 }

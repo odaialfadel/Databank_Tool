@@ -23,9 +23,9 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tool.model.UtilitiesTool;
-import tool.model.formateTyp.ServerFormate;
+import tool.model.formateTyp.ServerFormat;
 
-public class ExcelFormat implements ServerFormate {
+public class ExcelFormat implements ServerFormat {
 
 	private Workbook book;
 	private Sheet sheet;
@@ -132,12 +132,9 @@ public class ExcelFormat implements ServerFormate {
 		return style;
 	}
 
+	@Override
 	public int getRowIndex() {
 		return rowIndex;
-	}
-
-	public void setRowIndex(int rowIndex) {
-		this.rowIndex = rowIndex;
 	}
 
 }
