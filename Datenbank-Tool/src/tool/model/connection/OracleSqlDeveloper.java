@@ -9,7 +9,6 @@ import java.sql.Statement;
 public class OracleSqlDeveloper {
 	private static Connection conn;
 
-	// TODO Singelton for the database
 
 	/**
 	 * Verbindung aufbauen, statement ausfueren und speichern, Verbindung Abbrechen
@@ -26,11 +25,14 @@ public class OracleSqlDeveloper {
 		} catch (SQLException e) {
 			return null;
 		}
-
 	}
 
+	/*
+	 * Verbindung herstellen
+	 */
 	public static Connection connect(ConnectionData connectionData) {
 		try {
+			// Diese Klasse muss aufgerufen werden, um den OJDBC-Treiber zu aktivieren
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(
 					"jdbc:oracle:thin:@//localhost:" + connectionData.getPort() + "/" + connectionData.getServiceName(),
@@ -44,6 +46,9 @@ public class OracleSqlDeveloper {
 		
 	}
 
+	/*
+	 * Verbindung Abbrechen
+	 */
 	public static void desconnect() {
 		try {
 			conn.close();
@@ -52,3 +57,4 @@ public class OracleSqlDeveloper {
 		}
 	}
 }
+

@@ -28,11 +28,14 @@ public class UserSettingsView extends JDialog {
 
 	private JLabel datenbankName, userNameLabel, passwortLabel, serviceLabel, portLabel;
 
-
+	public UserSettingsView() {
+		initialize();
+		setVisible(true);
+	}
 	/**
 	 * Create the dialog.
 	 */
-	public UserSettingsView() {
+	private void initialize() {
 		setIconImage(
 				Toolkit.getDefaultToolkit().getImage(UserSettingsView.class.getResource("/tool/img/settings.png")));
 		setBounds(100, 100, 346, 269);
@@ -117,7 +120,7 @@ public class UserSettingsView extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		setVisible(true);
+
 		}
 
 		public JButton getDeleteButton() {

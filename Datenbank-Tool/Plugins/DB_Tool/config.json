@@ -9,29 +9,8 @@
   "test": {
     "datenbank": "test",
     "username": "root",
-    "passwort": "",
-    "serviceName": "localhost",
+    "passwort": "[C@28074f78",
+    "serviceName": "",
     "port": "3306"
-  },
-  "testJava": {
-    "datenbank": "testJava",
-    "username": "root",
-    "passwort": "",
-    "serviceName": "localhost",
-    "port": "3306"
-  },
-  "test22": {
-    "datenbank": "test22",
-    "username": "root",
-    "passwort": "12345",
-    "serviceName": "localhost",
-    "port": "3306"
-  },
-  "wer": {
-    "datenbank": "wer",
-    "username": "wer",
-    "passwort": "[C@2f98009f",
-    "serviceName": "rwe",
-    "port": "rwer"
   }
 }

@@ -17,10 +17,6 @@ import tool.view.ViewTool;
 public class Applikation {
 
 	public static void main(String[] args) {
-//		Config config = new Config();
-//		config.createConfig("odai", new ConnectionData("odai", "ll", "ll", "ll", "ll"));
-//		config.deleteConfig("fgfg");
-
 		runApp();
 	}
 
@@ -33,10 +29,7 @@ public class Applikation {
 					JOptionPane.showMessageDialog(null, e);
 				}
 
-				ModelTool model = new ModelTool();
-				ViewTool view = new ViewTool();
-				view.setVisible(true);
-				ControllerTool controller = new ControllerTool(view, model);
+				ControllerTool controller = new ControllerTool(new ViewTool(), new ModelTool());
 				controller.initController();
 			}
 		});

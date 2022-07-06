@@ -50,6 +50,8 @@ public class ControllerTool {
 
 		viewTool.getAddFilesAndConnectionToCollection().addActionListener(e -> addConnectionsAndFilesToMapList());
 
+		viewTool.getClearListsButtun().addActionListener(e -> clearEverythingInList());
+
 		// viewTool.getConnectionComboBox().addActionListener(e ->
 		// addElementsToCombo(viewTool));
 
@@ -63,6 +65,11 @@ public class ControllerTool {
 		// Output
 		viewTool.getOutputButton().addActionListener(e -> openOutputFolder());
 
+	}
+
+	private void clearEverythingInList() {
+		listOfConnAndFiles.clear();
+		viewTool.getUebersichtTextArea().setText("Cleared!");
 	}
 
 //	public void setImg() {

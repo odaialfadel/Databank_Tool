@@ -1,3 +1,4 @@
+
 package tool.tests;
 
 import static org.junit.Assert.assertTrue;
@@ -10,14 +11,14 @@ import org.junit.Test;
 import tool.model.connection.ConnectionData;
 import tool.model.connection.MySQLConnection;
 
-public class JUnit_MySqlConnecton {
+public class JUnit_OracleSqlDeveloper {
 
 
 
 	// test if there is connection
 	@Test
 	public void test_connect() {
-		Connection conn = MySQLConnection.connect(new ConnectionData("odai", "root", "", "", "3306"));
+		Connection conn = MySQLConnection.connect(new ConnectionData("odai", "root", "odai123", "", "3306"));
 
 		boolean connected = false;
 		if (conn != null) {
@@ -29,7 +30,7 @@ public class JUnit_MySqlConnecton {
 	// test if the connection disconnected
 	@Test
 	public void test_disconnect() {
-		Connection conn = MySQLConnection.connect(new ConnectionData("odai", "root", "", "", "3306"));
+		Connection conn = MySQLConnection.connect(new ConnectionData("odai", "root", "odai123", "", "3306"));
 		MySQLConnection.disconnect();
 
 		boolean disconnected = false;
@@ -43,11 +44,12 @@ public class JUnit_MySqlConnecton {
 	@Test
 	public void test_execQuery() {
 		// connection created
-		MySQLConnection.connect(new ConnectionData("odai", "root", "", "", "3306"));
+		MySQLConnection.connect(new ConnectionData("test", "root", "odai123", "", "3306"));
 
 		// ResultSet created
 		ResultSet rs = MySQLConnection.execQuery(
-				"SELECT MAX(Anschaffungs_preis) as hochstPreis, bezeichnung, Nutzungsdauer_Jahre FROM inventar WHERE Anschaffungs_preis > 80 AND Anschaffungs_preis < 91000 Order by Anschaffungs_preis DESC");
+				"SELECT MAX(Anschaffungs_preis) as hochstPreis, bezeichnung, Nutzungsdauer_Jahre FROM inventar "
+						+ " WHERE Anschaffungs_preis > 80 AND Anschaffungs_preis < 91000 Order by Anschaffungs_preis DESC");
 		
 		boolean executed = false;
 		if (rs != null) {
@@ -57,3 +59,6 @@ public class JUnit_MySqlConnecton {
 	}
 
 }
+
+
+

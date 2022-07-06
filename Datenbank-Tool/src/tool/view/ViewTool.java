@@ -22,7 +22,8 @@ import javax.swing.border.LineBorder;
 public class ViewTool extends JFrame {
 
 	private JPanel contentPanel;
-	private JButton changeConfigButton, runButton, openFileButton, addFilesAndConnectionToCollection, outputButton;
+	private JButton changeConfigButton, runButton, openFileButton, addFilesAndConnectionToCollection, clearListsButtun,
+			outputButton;
 	
 
 	private JMenuBar menuBar;
@@ -37,13 +38,7 @@ public class ViewTool extends JFrame {
 	private JScrollPane scrollPane;
 
 
-	public JLabel getLoadingLabel() {
-		return loadingLabel;
-	}
 
-	public void setLoadingLabel(JLabel loadingLabel) {
-		this.loadingLabel = loadingLabel;
-	}
 
 
 	/**
@@ -52,6 +47,7 @@ public class ViewTool extends JFrame {
 	public ViewTool() {
 
 		initialize();
+		setVisible(true);
 	}
 
 	/**
@@ -114,7 +110,7 @@ public class ViewTool extends JFrame {
 		// Button
 		openFileButton = new JButton("Choose Folder");
 		openFileButton.setOpaque(false);
-		openFileButton.setBounds(306, 104, 116, 27);
+		openFileButton.setBounds(306, 104, 152, 27);
 		contentPanel.add(openFileButton);
 
 		runButton = new JButton("Run");
@@ -133,11 +129,15 @@ public class ViewTool extends JFrame {
 		contentPanel.add(connectionComboBox);
 
 		addFilesAndConnectionToCollection = new JButton("Add");
-		addFilesAndConnectionToCollection.setBounds(306, 141, 116, 27);
+		addFilesAndConnectionToCollection.setBounds(387, 142, 71, 27);
 		addFilesAndConnectionToCollection.setOpaque(false);
 		contentPanel.add(addFilesAndConnectionToCollection);
 
 
+		clearListsButtun = new JButton("Clear");
+		clearListsButtun.setOpaque(false);
+		clearListsButtun.setBounds(306, 142, 71, 27);
+		contentPanel.add(clearListsButtun);
 
 		loadingLabel = new JLabel("");
 		loadingLabel.setBounds(254, 178, 200, 161);
@@ -167,6 +167,7 @@ public class ViewTool extends JFrame {
 		backgroundLabel.setIcon(new ImageIcon(ViewTool.class.getResource("/tool/img/home3.jpg")));
 		backgroundLabel.setBounds(0, 0, 716, 490);
 		contentPanel.add(backgroundLabel);
+
 
 	}
 
@@ -216,6 +217,22 @@ public class ViewTool extends JFrame {
 
 	public void setAddFilesAndConnectionToCollection(JButton addFilesAndConnectionToCollection) {
 		this.addFilesAndConnectionToCollection = addFilesAndConnectionToCollection;
+	}
+
+	public JButton getClearListsButtun() {
+		return clearListsButtun;
+	}
+
+	public void setClearListsButtun(JButton clearListsButtun) {
+		this.clearListsButtun = clearListsButtun;
+	}
+
+	public JLabel getLoadingLabel() {
+		return loadingLabel;
+	}
+
+	public void setLoadingLabel(JLabel loadingLabel) {
+		this.loadingLabel = loadingLabel;
 	}
 
 

@@ -20,7 +20,7 @@ public class JUnit_ExcelFormat {
 	@Test
 	public void test_export() {
 
-		MySQLConnection.connect(new ConnectionData("odai", "root", "", "", "3306"));
+		MySQLConnection.connect(new ConnectionData("odai", "root", "odai123", "", "3306"));
 		ResultSet rs = MySQLConnection.execQuery(
 				"SELECT MAX(Anschaffungs_preis) as hochstPreis, bezeichnung, Nutzungsdauer_Jahre FROM inventar WHERE Anschaffungs_preis > 80 AND Anschaffungs_preis < 91000 Order by Anschaffungs_preis DESC");
 

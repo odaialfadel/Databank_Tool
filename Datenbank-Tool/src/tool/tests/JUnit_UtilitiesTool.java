@@ -1,7 +1,9 @@
+
 package tool.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import javax.swing.ImageIcon;
 
@@ -11,45 +13,47 @@ import tool.model.UtilitiesTool;
 
 public class JUnit_UtilitiesTool {
 
-	/**
-	 * UtilitiesTool class test all funktions
-	 */
-
-	// Test my remove Extension function
+	// Teste die removeFileExtension, die de eErweiterung von der Datei loescht
 	@Test
 	public void test_removeFileExtension() {
-		String newString = UtilitiesTool.removeFileExtension("test/love/haha/text.sql.text");
-		assertEquals("test/love/haha/text.sql", newString);
+		String newString = UtilitiesTool.removeFileExtension("test/folder/file.sql.text");
+		String newString2 = UtilitiesTool.removeFileExtension("test/folder/file.sql");
+		
+		assertEquals("test/folder/file.sql", newString);
+		assertEquals("test/folder/file", newString2);
 	}
 
-	// Test my remove Extension function
+	// Teste formatDate Funktion, die das heutige Datum richtig formatiert
 	@Test
 	public void test_formatDate() {
 		String newString = UtilitiesTool.formatDate();
-		assertFalse("2022.03.16".equals(newString));
-		assertEquals("20220317", newString);
+		assertFalse("2022.03.18".equals(newString));
+		assertTrue("20220318".equals(newString));
+		assertEquals("20220318", newString);
 	}
 
-	// Test my remove Extension function
+	// Teste readFile Funktion, die eine bestimmte Datei ausliest und als String
+	// zurueckgibt
 	@Test
 	public void test_readFile() {
 		String newString = UtilitiesTool
-				.readFile("C:\\Users\\odaia\\OneDrive\\Desktop\\Abschluss_Projekt\\test_Statements\\odai1.txt");
+				.readFile("D:\\FC_9999.sql");
 		assertEquals(
-				"SELECT MAX(Anschaffungs_preis) as hochstPreis, bezeichnung, Nutzungsdauer_Jahre FROM inventar WHERE Anschaffungs_preis > 80 AND Anschaffungs_preis < 91000 Order by Anschaffungs_preis DESC",
+				"SELECT * FROM inventar;",
 				newString);
 	}
 
-	// Test my remove Extension function
+	// Teste cleanQuery Funktion, die die semiqulon von der SQL-Abfrage loescht
 	@Test
 	public void test_cleanQuery() {
-		String newString = UtilitiesTool.cleanQuery("ewfwefwefwefwfwefwef;");
-		String newString1 = UtilitiesTool.cleanQuery("ewfwefwefwefwfwefwef");
-		assertEquals("ewfwefwefwefwfwefwef", newString);
-		assertEquals("ewfwefwefwefwfwefwef", newString1);
+		String newString = UtilitiesTool.cleanQuery("SELECT * FROM inventar;");
+		String newString1 = UtilitiesTool.cleanQuery("SELECT * FROM inventar;;;;;;;;;");
+		assertEquals("SELECT * FROM inventar", newString);
+		assertEquals("SELECT * FROM inventar", newString1);
 	}
 
-	// Test if it creates the right object
+	// Teste setIcon Funktion, die ein bestimmtes Foto uebergeben bekommt, liest und
+	// dieses zurueckgibt
 	@Test
 	public void test_setIcon() {
 		ImageIcon newImg = UtilitiesTool.setIcon("home3.jpg");
@@ -57,3 +61,16 @@ public class JUnit_UtilitiesTool {
 		assertEquals(newImgTest.getImage(), newImg.getImage());
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,4 @@
+
 package tool.model.connection;
 
 import java.sql.Connection;
@@ -10,7 +11,6 @@ public class MySQLConnection {
 
 	private static Connection conn;
 
-	// TODO Singelton for the database
 
 	/**
 	 * Verbindung aufbauen, statement ausfueren und speichern, Verbindung Abbrechen
